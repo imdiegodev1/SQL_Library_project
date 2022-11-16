@@ -28,7 +28,7 @@ Kaggle will provide you with many resources and open data for your projects rela
 
 For more on SQL and databases see my notes (only in spanish):
 
-- [Data bases](https://drive.google.com/file/d/10MDw_llXH3bQwYK7jlJo7ahotsHSM6hX/view)
+- [Databases](https://drive.google.com/file/d/10MDw_llXH3bQwYK7jlJo7ahotsHSM6hX/view)
 - [SQL](https://drive.google.com/file/d/1DHNKuA1FnyRUByQTc_3gONyJ4C0gO1_8/view)
 
 To see other learning projects and notes please follow this [link](https://imdiego.dev/projects/projects/notes).
