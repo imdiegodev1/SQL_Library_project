@@ -1,6 +1,6 @@
 # SQL_projects
 
-## Libreria
+## Library
 
 This project is focused on teaching the fundamentals of SQL and relational databases (RDS). It is a common application of RDS to a library. You can fins examples of:
 
