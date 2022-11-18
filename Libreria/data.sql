@@ -55,4 +55,11 @@ VALUES (1, 'Carrie', '1974-01-01'),
 
 INSERT INTO usuarios (nombre, apellidos, username, email)
 VALUES ('Diego', 'Naranjo', 'imdiego.dev', 'hi@imdiego.dev'),
-       ('Juan', 'Perez', 'pepeperez', 'pepe@perez.com');
+       ('Juan', 'Perez', 'pepeperez', 'pepe@perez.com'),
+       ('Juana', 'Alpaca', 'JuanaLaAlpaca', 'juana@alpacas.pe'),
+       ('Ciudadano', 'Promedio', 'CiudadanoPromedio1', 'promedio1@ciudadano.com'),
+       ('Ciudadano2', 'promedio2', 'CiudadanoPromedio2', 'promedio2@ciudadano.com');
+
+INSERT INTO libros_usuarios(libro_id, usuario_id)
+VALUES (40, 1), (52, 1), (69, 1), (45, 2), (59, 2)
+       (41, 4), (50, 4);

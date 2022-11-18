@@ -1,16 +1,16 @@
---Inicio comun para una BD
+--Common startup for a BD
 DROP DATABASE IF EXISTS libreria_cf;
 CREATE DATABASE libreria_cf;
 
---Declarando al motor la base que se usara
+--Declaring to the motor the base to be used
 USE libreria_cf;
 
---Eliminar las tablas si existen
+--Delete tables if they exist
 DROP TABLE IF EXISTS autores;
 DROP TABLE IF EXISTS libros;
 DROP TABLE IF EXISTS usuarios;
 
---Tabla autores
+--Table authors
 CREATE TABLE autores(
     autor_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(25) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE autores(
     fecha_creacion DATETIME DEFAULT current_timestamp
 );
 
---Tabla libros
+--Table books
 CREATE TABLE libros(
     libro_id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     autor_id INT UNSIGNED NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE libros(
     FOREIGN KEY (autor_id) REFERENCES autores (autor_id)
 );
 
---Tabla usuarios
+--Table of users
 CREATE TABLE usuarios(
     usuario_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(25) NOT NULL,
@@ -44,7 +44,17 @@ CREATE TABLE usuarios(
     fecha_creacion DATETIME DEFAULT current_timestamp
 );
 
---Alterando una tabla
+--Table users and books
+CREATE TABLE libros_usuarios(
+    libro_id INT UNSIGNED NOT NULL,
+    usuario_id INT UNSIGNED NOT NULL,
+
+    FOREIGN KEY (libro_id) REFERENCES libros(libro_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+    fecha_creacion DATETIME DEFAULT current_timestamp
+);
+
+--Altering a table
 ALTER TABLE libros ADD ventas INT UNSIGNED NOT NULL;
 ALTER TABLE libros ADD stock INT UNSIGNED NOT NULL DEFAULT 10;
 
@@ -52,129 +62,137 @@ ALTER TABLE libros DROP COLUMN ventas;
 
 ALTER TABLE libros ADD ventas INT UNSIGNED NOT NULL DEFAULT 0;
 
---Insertando registros
---Para ingresar registros podemos referirnos al archivo data.sql
---donde se encontraran los datos para este ejercicio.
+--Inserting records
+--To enter records we can refer to the file data.sql
+--where the data for this exercise will be found.
 
---Consulta de registros
+--Record queries
 SELECT * FROM autores;
 SELECT * FROM libros;
 SELECT * FROM usuarios;
 
---Consulta de registros a manera de "tarjetas"
+--Consultation of records in the form of "cards"
 SELECT * FROM autores\G;
 
----Seleccion de ciertas columnas de una tabla
+--Selecting certain columns of a table
 SELECT libro_id, titulo FROM libros;
 
---Uso sentencia WHERE
+--WHERE 
 SELECT * FROM libros
 WHERE titulo = 'Carrie';
 
---Uso de WHERE y NULL
+--Use WHERE and NULL
 
---Forma 1
+--Form 1
 SELECT * FROM autores
 WHERE seudonimo IS NULL;
 
 SELECT * FROM autores
 WHERE pais_origen IS NOT NULL;
 
---Forma 2
+--Form 2
 SELECT * FROM autores
 WHERE pais_origen <=> NULL;
 
---Filtrado de informacion con Rangos
+--BETWEEN
+--Filtering information with ranges
 SELECT titulo, fecha_publicacion FROM libros
 WHERE fecha_publicacion BETWEEN '1995-01-01' AND '2015-01-01';
 
---Obtener registros a partir de una lista
---mi lista = 'ojo de fuego', 'cujo', 'El hobbit', 'la torre oscura 7'
---Clausula IN nos ayuda con esto y ademas optimisamos la busqueda.
+--IN
+--Get records from a list
+--my list = 'eye of fire', 'cujo', 'the hobbit', 'the dark tower 7'.
+--Clausula IN helps us with this and also optimizes the search.
 SELECT * FROM libros
 WHERE titulo IN 
 ('ojo de fuego', 'cujo', 'El hobbit', 'la torre oscura 7');
 
---Obtener valores unicos de una columna
+--DISTINCT
+--Get unique values from a column
 SELECT DISTINCT titulo FROM libros;
 
+--AS
 --Alias
 SELECT autor_id AS ID, titulo AS nombre_libro FROM libros;
 
---Actualizar registros
+--UPDATE
+--Update registers
 UPDATE libros SET descripcion = 'Nueva descripcion';
 
---Buena practica para actualizar un registro
+--UPDATE and WHERE
+--Good practice for updating a registry
 UPDATE libros SET descripcion = 'Descripcion del libro'
 WHERE titulo = 'Carrie';
 
----eliminando registros
+--DELETE
+--Delete registers
 DELETE FROM libros WHERE autor_id = 1;
 
---Funciones
+--FUNCTIONS
 
---Sobre STRINGS
---Concat -> para concatenar campos 
+--About STRINGS
+--CONCAT -> to concatenate strings 
 SELECT CONCAT (nombre, " ", apellido) AS nombre_completo
 FROM autores;
 
---LENGTH -> para visualizar cuantos caracteres tiene un string
+--LENGTH -> to display how many characters a string has
 SELECT LENGTH ("Hola Mundo");
 
---Con esta funcion tambien podemos filtrar datos
+--With LENGTH we can filter registers
 SELECT * FROM autores 
 WHERE LENGTH(nombre) > 10;
 
---UPPER y LOWER permiten volver todos los caracteres en 
---mayusculas o minusculas
+--UPPER and LOWER allows us to return string with
+--upper or lower case format
 SELECT UPPER(nombre), LOWER(nombre)
 FROM autores;
 
---Sobre INT y FLOAT
---RAND -> permite obtener un numero aleatorio entre 0 y 1
+--About INT and FLOAT
+--RAND -> get a random value between 0 - 1
 SELECT RAND();
 
---ROUND -> permite redondear un numero decimal
+--ROUND -> allows rounding of a decimal number
 SELECT ROUND( RAND() );
 
---TRUNCATE -> como funcion permite definir el numero de 
---decimales que requerimos para un numero decimal
+--TRUNCATE -> as a function allows us to define the number of 
+--decimals we require for a decimal number
 SELECT TRUNCATE (1.1233456788, 3);
 
---POW -> para elevar un numero a alguna potencia
+--POW -> returns the value of a number raised to the power
+--of another number
 SELECT POW(4, 3);
 
---sobre FECHAS
---NOW -> obtener la fecha y hora actual
+--About DATES
+--NOW -> Gate current date time
 SET @now = NOW();
 
---obtener datos especificos de un campo DATETIME
+--get specific values of a date time field DATETIME
 SELECT SECOND(@now),
     MINUTE(@now),
     HOUR(@now),
     MONTH(@now),
     YEAR(@nowo);
 
---Definir dia de la semana, mes o a;o
+--define current day of week, month or year
 SELECT DAYOFWEEK(@now),
     DAYOFMONTH(@now),
     DAYOFYEAR(@now);
 
---DATE -> para cambiar el tipo de dato a DATE
+--DATE -> To transfor data type to date
 SELECT DATE(@now);
 
 
---condicionales
---IF -> recibe 3 argumentos:
---IF(condicion, resultado se cumple condicion, resultado no cumple la condicion)
+--conditionals
+--IF -> needs 3 arguments:
+--IF(condition, result if conditon is met, result if condition is not met)
 SELECT IF( 100 > 90, "Mayor", "Menor");
 
---IFNULL -> para trabajar con campos nulos:
---IFNULL(atributo, "resultado si es nulo", resultado si no es nulo)
+--IFNULL -> pto work with null values:
+--IFNULL(attribute, result if is null, result if is not null)
 SELECT IFNULL(seudonimo, "No seudonimo", seudonimo);
 
 
---Creando funciones
+--Creating FUNCTIONS
 DELIMITER // 
 
 CREATE FUNCTION agregar_dias(fecha DATE, dias INT)
@@ -185,13 +203,13 @@ END//
 
 DELIMITER ;
 
---utilizar una fucion
+--Use a function
 SELECT agregar_dias(@now, 60);
 
---Agregando/alterando registros con funciones
+--Adding/alter registers with a function
 
---Funcion para agregar un numero aleatorio de paginas
---a la columna paginas en la tabla libros
+--Funtion to add a random number of pages in column paginas from
+--libros table
 DELIMITER //
 
 CREATE FUNCTION obtener_paginas()
@@ -203,8 +221,8 @@ END//
 
 DELIMITER ;
 
---Funcion para agregar un numero aleatoreo de ventas
---a la columna ventas en la tabla libros
+--Funtion to add a random number of sells in ventas column from
+--libros table
 DELIMITER //
 
 CREATE FUNCTION obtener_ventas()
@@ -216,47 +234,48 @@ END//
 
 DELIMITER ;
 
---utilizando funciones para generar datos
+--Using functions to add data
 UPDATE libros SET paginas = obtener_paginas();
 UPDATE libros SET ventas = obtener_ventas();
 
---Listar funciones
+--List functions
 SELECT name FROM mysql.proc WHERE db = database() AND type = 'FUNCTION';
 
---Eliminar una funcion
+--EDelete functions
 DROP FUNCTION agregar_dias;
 
---sentencia LIKE
+--LIKE
+--It is commonly use with WHERE and helps you to filter/get data
+--from strings columns
 
---cadena de caracteres al principio del texto:
+--Chain of characters at the beggining of a string:
 SELECT * FROM libros
 WHERE titulo LIKE 'Harry potter%';
 
---cadena de caracteres al final del texto:
+--Chain of characters at the beginning of a string:
 SELECT * FROM libros
 WHERE titulo LIKE '%anillo';
 
---cadena de caracteres en algun momento del texto
+--Chain of characters located anywhere of a string
 SELECT * FROM libros
 WHERE titulo LIKE '%la%';
 
---un caracter en una posicion en especifico
---En este caso que tenga la letra b en la tercera posicion de
---la primera palabra
+--Get a text field with a character located in a certain position
+--b letter in third position
 SELECT * FROM libros
 WHERE titulo LIKE '%__b';
 
---Podemos utilizar la sentencia LEFT o buscar que se cumpla
---mas de una condicion con el operador OR
+--LEFT and LIKE
+--we can use LEFT and LIKE to find a chain starting with certain letter
 
---ejemplo con LIKE
+--LIKE example
 SELECT autor_id, titulo FROM libros WHERE titulo LIKE 'H%' or titulo LIKE 'L%';
---ejemplo con LEFT
+--LEFT example
 SELECT autor_id, titulo FROM libros WHERE LEFT(titulo, 1) = 'H' OR LEFT(titulo, 1) = 'L';
 
---Una alternativa a esto en el caso de necesitar que se cumplan
---varias condiciones es usando expresiones regulares
---utilizando RegEx tnemos entonces
+--An alternative to this in the case of needing to be complied with
+--several conditions is by using regular expressions
+--So using ReGex:
 SELECT titulo FROM libros
 WHERE titulo REGEXP '^[HL]';
 
@@ -265,7 +284,7 @@ WHERE titulo REGEXP '^[HL]';
 SELECT titulo FROM libros
 ORDER BY titulo;
 
---Si queremos que sea en orden descendente
+--If we want it to be in descending order
 SELECT titulo FROM libros
 ORDER BY titulo DESC;
 
@@ -274,7 +293,7 @@ ORDER BY titulo DESC;
 SELECT titulo FROM libros
 LIMIT 10;
 
---Funciones de agregacion
+--Aggregation functions
 SELECT COUNT(*) FROM libros;
 SELECT SUM(stock) FROM libros;
 
@@ -290,42 +309,39 @@ FROM libros
 GROUP BY autor_id
 HAVING SUM(stock) > 50;
 
---Union
---Si tengo dos qqueries y quiero unir los resultados puedo
---usar el operador union
+--UNION
+--You can concat the results of two queries
+--It is important to have the same column distribution in both results
 SELECT CONCAT(nombre, " ", apellido) FROM autores
 UNION
 SELECT CONCAT(nombre, " ", apellidos) FROM usuarios;
 
 
 --Sub Queries
---En este caso queremos obtener los autores cuyos
---libros tengan mayores ventas a las del promedio,
---para esto se debe hacer un paso a
---paso para obtener la informacion adecuada.
+--In this case, we want to obtain the authors whose books have
+--higher sales than the average, for this we must make a step by
+--step to get the right information.
 
---primero: obtener el promedio de ventas
+--First: get average sales
 SELECT AVG(ventas) FROM libros;
 
---segundo: una vez tenga este promedio como 
---seria la consulta?
+--Second: once you have average sales you can set it to a constant in SQL
+--so de Query wold be like
 SELECT autor_id FROM libros
 GROUP BY autor_id 
 HAVING SUM(ventas) > @un_promedio;
 
---podriamos convertir el promedio generado en el primer paso
---como una variable
+--Here is how you can define the value of a constant with a query
 SET @un_promedio = (SELECT AVG(ventas) FROM libros);
 
---Con una subconsulta podemos hacer ambas operaciones
---en un solo proceso
+--With subqueres we can define this value without using a constant
 SELECT autor_id FROM libros
 GROUP BY autor_id 
 HAVING SUM(ventas) > (SELECT AVG(ventas) FROM libros);
 
---Ahora como funcionaria si no quiero obtener los id 
---de los autores sino el nombre de los mismos?
---Puedo hacer mas de una subconsulta anidada
+--Now how would it work if I don't want to get the ids of 
+--the authors but their names? of the authors but the name of the
+--authors? Can I do more than one nested subquery?
 SELECT CONCAT(nombre, " ", apellido)
 FROM autores
 WHERE autor_id IN(
@@ -335,9 +351,248 @@ WHERE autor_id IN(
 );
 
 
---Exists
+--EXIST
 SELECT IF(
     EXISTS(SELECT libro_id FROM libros WHERE titulo = 'El Hobbit'),
     'Disponible',
     'No Disponible'
 ) AS mensaje;
+
+
+--JOIN
+
+--INNER JOIN
+SELECT 
+    libros.titulo,
+    CONCAT(autores.nombre, " ", autores.apellido) AS nombre_autor,
+    libros.fecha_creacion
+FROM libros
+INNER JOIN autores
+ON libros.autor_id = autores.autor_id;
+
+--USING
+--If a join between two tables is made with a fields that have the same
+--name we can use USING
+SELECT 
+    libros.titulo,
+    CONCAT(autores.nombre, " ", autores.apellido) AS nombre_autor,
+    libros.fecha_creacion
+FROM libros
+INNER JOIN autores
+ON USING(autor_id);
+
+--LEFT JOIN == LEFT OUTER JOIN
+SELECT
+    CONCAT(nombre, " ", apellidos),
+    libros_usuarios.libro_id
+FROM usuarios
+LEFT JOIN libros_usuarios
+ON usuarios.usuario_id = libros_usuarios.usuario_id
+WHERE libros_usuarios.libro_id IS NOT NULL;
+
+--RIGHT JOIN == RIGHT OUTER JOIN
+SELECT
+    CONCAT(nombre, " ", apellidos),
+    libros_usuarios.libro_id
+FROM libros_usuarios
+RIGHT JOIN usuarios
+ON usuarios.usuario_id = libros_usuarios.usuario_id
+WHERE libros_usuarios.libro_id IS NULL;
+
+--Multiple JOINS
+--In this example I want to get the full name of the users that 
+--have lent a book, the book was written by a writer with a pseudonym
+--and the loan was made today.
+SELECT DISTINCT
+    CONCAT(usuarios.nombre, " ", usuarios.apellidos) AS nombre_usuario
+FROM usuarios
+INNER JOIN libros_usuarios ON usuarios.usuario_id = libros_usuarios.usuario_id
+    AND DATE(libros_usuarios.fecha_creacion) = CURDATE()
+INNER JOIN libros ON libros_usuarios.libro_id = libros.libro_id
+INNER JOIN autores ON libros.autor_id = autores.autor_id
+    AND autores.seudonimo IS NOT NULL;
+
+
+--CROSS JOIN
+--Cartesian product
+--With this we can get that each user is entitled to
+--one copy of each book
+SELECT usuarios.username, libros.titulo
+FROM usuarios CROSS JOIN libros
+ORDER BY username DESC;
+
+
+--VIEWS
+--I want to see information about all the users who have borrowed books
+--books in the last week and the quantity of books
+CREATE VIEW prestamos_usuarios_vw AS 
+SELECT usuarios.usuario_id,
+       usuarios.nombre,
+       usuarios.email,
+       usuarios.username,
+       COUNT(usuarios.usuario_id) AS n_libros
+FROM usuarios
+INNER JOIN libros_usuarios
+ON usuarios.usuario_id = libros_usuarios.usuario_id
+GROUP BY usuarios.usuario_id;
+
+--to see the views we can just list the tables
+SHOW TABLES;
+
+--DELETE a VIEW
+DROP VIEW prestamos_usuarios_vw
+
+--EDIT a view
+--In this case, it was not specified that the loans should be
+--the same week
+CREATE OR REPLACE VIEW prestamos_usuarios_vw AS 
+SELECT usuarios.usuario_id,
+       usuarios.nombre,
+       usuarios.email,
+       usuarios.username,
+       COUNT(usuarios.usuario_id) AS n_libros
+FROM usuarios
+INNER JOIN libros_usuarios
+ON usuarios.usuario_id = libros_usuarios.usuario_id
+    AND libros_usuarios.fecha_creacion >= CURDATE() - INTERVAL 7 DAY
+GROUP BY usuarios.usuario_id;
+
+
+--CREATE PROCEDURES
+--Store procedures
+--a procedure to generate the loan of a book that is seen
+--reflected in the user_books table and subtract 1 unit from stock
+--in the books table
+DELIMITER //
+
+CREATE PROCEDURE prestamo(usuario_id INT, libro_id INT)
+BEGIN
+    INSERT INTO libros_usuarios(libro_id, usuario_id)
+        VALUES(libro_id, usuario_id);
+    UPDATE libros SET stock = stock -1
+        WHERE libros.libro_id = libro_id;
+
+END//
+
+DELIMITER ;
+
+--Display store procedures created in a database
+SELECT name FROM mysql.proc WHERE db = database() AND type = 'PROCEDURE';
+
+--Using a store procedure
+CALL prestamo(4, 60);
+
+--Delete a store procedure
+DROP PROCEDURE prestamo;
+
+--return a value after using a store procedure
+--It is necessary to define a constant before
+SET @cantidad = -1;
+
+DELIMITER //
+
+CREATE PROCEDURE prestamo(usuario_id INT, libro_id INT, OUT cantidad INT)
+BEGIN
+    INSERT INTO libros_usuarios(libro_id, usuario_id)
+        VALUES(libro_id, usuario_id);
+    UPDATE libros SET stock = stock -1
+        WHERE libros.libro_id = libro_id;
+
+    SET cantidad = (SELECT stock FROM libros 
+        WHERE libros.libro_id = libro_id);
+
+END//
+
+DELIMITER ;
+
+--Use conditionals in Stock Procedures I want to do the same operation,
+--but only if there are books available for loan
+DELIMITER //
+
+CREATE PROCEDURE prestamo(usuario_id INT, libro_id INT, OUT cantidad INT)
+BEGIN
+    SET cantidad = (SELECT stock FROM libros 
+        WHERE libros.libro_id = libro_id);
+    
+    IF cantidad > 0 THEN 
+        INSERT INTO libros_usuarios(libro_id, usuario_id)
+            VALUES(libro_id, usuario_id);
+        UPDATE libros SET stock = stock -1
+            WHERE libros.libro_id = libro_id;
+
+        SET cantidad = cantidad - 1;
+    ELSE
+        SELECT "No es posible realizar el prestamo" AS mesaje_error;
+    END IF;
+
+END//
+
+DELIMITER ;
+
+
+--CASES
+DELIMITER //
+
+CREATE PROCEDURE tipo_lector(usuario_id INT)
+BEGIN
+    SET @cantidad = (SELECT COUNT(*) FROM libros_usuarios
+                        WHERE libros_usuarios.usuario_id = usuario_id);
+
+    CASE
+        WHEN @cantidad > 20 THEN
+            SELECT "Fanatico" AS mensaje;
+        WHEN @cantidad > 10 AND @cantidad < 20 THEN
+            SELECT "Aficionado" AS mensaje;
+        WHEN @cantidad > 5 AND @cantidaad < 10 THEN 
+            SELECT "Promedio" AS mensaje;
+        ELSE
+            SELECT "Nuevo" AS mensaje;
+    END CASE;
+    
+END//
+
+DELIMITER ;
+
+
+--WHILE and REPEAT loops
+
+--I want a store procedure that returns 5 random books
+--WHILE
+DELIMITER //
+
+CREATE PROCEDURE libros_azar()
+BEGIN
+    SET @iteracion = 0;
+
+    WHILE @iteracion < 5 DO
+
+        SELECT libro_id, titulo FROM libros
+        ORDER BY RAND()
+        LIMIT 1;
+        SET @iteracion = @iteracion +1;
+
+    END WHILE;
+END//
+
+DELIMITER ;
+
+--REPEAT
+DELIMITER //
+
+CREATE PROCEDURE libros_azar()
+BEGIN
+    SET @iteracion = 0;
+
+    REPEAT
+
+        SELECT libro_id, titulo FROM libros
+        ORDER BY RAND()
+        LIMIT 1;
+        SET @iteracion = @iteracion +1;
+
+    UNTIL @interacion >= 5
+    END REPEAT;
+END//
+
+DELIMITER ;
+
