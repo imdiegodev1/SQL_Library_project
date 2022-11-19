@@ -36,7 +36,7 @@ Kaggle will provide you with many resources and open data for your projects rela
 
 ## 3_SQL2
 
-
+## To learn more about:
 For more on SQL and databases see my notes (only in spanish):
 
 - [Databases](https://drive.google.com/file/d/10MDw_llXH3bQwYK7jlJo7ahotsHSM6hX/view)
