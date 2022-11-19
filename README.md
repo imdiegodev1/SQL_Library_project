@@ -1,8 +1,8 @@
 # SQL_projects
 
-## Library
+## 1_Library_SQL1
 
-This project is focused on teaching the fundamentals of SQL and relational databases (RDS). It is a common application of RDS to a library. You can fins examples of:
+This project is focused on teaching the fundamentals of SQL and relational databases (RDS) using MySQL database engine. It is a common application of RDS to a library. You can fins examples of:
 
 - Create a Database and tables.
 - Queries.
@@ -11,11 +11,16 @@ This project is focused on teaching the fundamentals of SQL and relational datab
 - Nested queries.
 - Joins.
 - Views.
-- Procedures.
-- Transactions.
-- Triggers.
 
-For this example the relational model would look like:
+In addition, there will be some examples of more advanced statements and tools of MySQL. Some of them are:
+
+- Functions.
+- Stored procedures.
+- While and Repeat Loop.
+- Transactions.
+- Error handlers.
+
+Here is a good example of the basic SQL skills needed to be a Data Analyst or Data scientist (maybe a BI). For this example the relational model would look like:
 
 ----SOOON------
 
@@ -26,6 +31,12 @@ The data ou can find in this project is gather and created by me using Wikipedia
 
 Kaggle will provide you with many resources and open data for your projects related to this field, while Mockaroo could help you create random registers for your tables.
 
+## 2_Exercises_SQL1.2
+
+
+## 3_SQL2
+
+## To learn more about:
 For more on SQL and databases see my notes (only in spanish):
 
 - [Databases](https://drive.google.com/file/d/10MDw_llXH3bQwYK7jlJo7ahotsHSM6hX/view)
