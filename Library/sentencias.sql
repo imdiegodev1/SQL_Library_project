@@ -596,3 +596,67 @@ END//
 
 DELIMITER ;
 
+
+--TRANSACCIONES
+
+--Quiero en una transacción definir los siguientes pasos
+SET @libro_id = 60, @usuario_id = 3;
+
+--1) actualizar el stock de lbros
+--2) Visualizar el libro seleccionado
+--3) Agregar un registro de prestamo a la tabla libros_usuarios
+--4) Ver los cambios en la tabla libro usuarios
+
+--Desarrollando nuestra transaccion, para ello ejecutamos:
+START TRANSACTION;
+
+--actualizar el stock de lbros
+UPDATE libros SET stock = stock - 1 WHERE libro_id = @libro_id;
+
+--Visualizar el libro seleccionado
+SELECT stock FROM libros WHERE libro_id = @libro_id;
+
+--Agregar un registro de prestamo a la tabla libros_usuarios
+INSERT INTO libros_usuarios(libro_id, usuario_id)
+VALUES (@libro_id, @usuario_id);
+
+--Ver los cambios en la tabla libro usuarios
+SELECT * FROM libros_usuarios;
+
+--Si no ha habido ningun error para persistir estos cambios 
+COMMIT;
+
+--Si la trasaccion falla podemos ejecutar
+ROLLBACK;
+--Y ningun cambio queda persistente en la BD
+
+--Es posible ejecutar una transaccion de una forma mas optima por medio
+--de store procedures. por ejemplo:
+
+DELIMITER //
+
+CREATE PROCEDURE prestamo(usuario_id INT, libro_id INT)
+BEGIN
+
+    
+    --Con esto definimos que cuando ocurra un error dentro del 
+    --procedure pare y ejecute algo (cuando se genere un error)
+    --En este caso que ejecute ROLLBACK;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO libros_usuarios(libro_id, usuario_id)
+    VALUES (libro_id, usuario_id);
+
+    UPDATE libros SET stock = stock - 1
+    WHERE libros.libro_id = libro_id;
+
+    COMMIT;
+
+END //
+
+DELIMITER ;
