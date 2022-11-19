@@ -241,7 +241,7 @@ UPDATE libros SET ventas = obtener_ventas();
 --List functions
 SELECT name FROM mysql.proc WHERE db = database() AND type = 'FUNCTION';
 
---EDelete functions
+--Delete functions
 DROP FUNCTION agregar_dias;
 
 --LIKE
@@ -597,41 +597,41 @@ END//
 DELIMITER ;
 
 
---TRANSACCIONES
+--TRANSACTIONS
 
---Quiero en una transacción definir los siguientes pasos
+--I want to define the following steps in a transaction
 SET @libro_id = 60, @usuario_id = 3;
 
---1) actualizar el stock de lbros
---2) Visualizar el libro seleccionado
---3) Agregar un registro de prestamo a la tabla libros_usuarios
---4) Ver los cambios en la tabla libro usuarios
+--1) update the book stock
+--2) Display the selected book
+--3) Add a lending record to the libros_usuarios table
+--4) View changes in the libros_usuarios table
 
---Desarrollando nuestra transaccion, para ello ejecutamos:
+--Creating our transaction, for this we execute:
 START TRANSACTION;
 
---actualizar el stock de lbros
+--update the book store
 UPDATE libros SET stock = stock - 1 WHERE libro_id = @libro_id;
 
---Visualizar el libro seleccionado
+--Display the selected book
 SELECT stock FROM libros WHERE libro_id = @libro_id;
 
---Agregar un registro de prestamo a la tabla libros_usuarios
+--Add a lending record to the libros_usuarios table
 INSERT INTO libros_usuarios(libro_id, usuario_id)
 VALUES (@libro_id, @usuario_id);
 
---Ver los cambios en la tabla libro usuarios
+--View changes in the libros_usuarios table
 SELECT * FROM libros_usuarios;
 
---Si no ha habido ningun error para persistir estos cambios 
+--If there has not been any error to persist these changes os 
 COMMIT;
 
---Si la trasaccion falla podemos ejecutar
+--If the transaction fails, we can execute
 ROLLBACK;
---Y ningun cambio queda persistente en la BD
+--And no change remains persistent in the DB.
 
---Es posible ejecutar una transaccion de una forma mas optima por medio
---de store procedures. por ejemplo:
+--It is possible to execute a transaction in a more optimal way by means of
+--store procedures, for example:
 
 DELIMITER //
 
@@ -639,9 +639,9 @@ CREATE PROCEDURE prestamo(usuario_id INT, libro_id INT)
 BEGIN
 
     
-    --Con esto definimos que cuando ocurra un error dentro del 
-    --procedure pare y ejecute algo (cuando se genere un error)
-    --En este caso que ejecute ROLLBACK;
+    --With this we define that when an error occurs inside the 
+    --procedure to stop and execute something (when an error is generated)
+    --In this case it executes ROLLBACK;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
