@@ -22,7 +22,7 @@ In addition, there will be some examples of more advanced statements and tools o
 
 Here is a good example of the basic SQL skills needed to be a Data Analyst or Data scientist (maybe a BI). For this example the relational model would look like:
 
-----SOOON------
+![alt text](https://github.com/imdiegodev1/SQL_projects/blob/main/1_Library_SQL1/Library_RDS.png?raw=true)
 
 The data ou can find in this project is gather and created by me using Wikipedia. However, if you want to have more registers I can recommend you the following sources:
 
