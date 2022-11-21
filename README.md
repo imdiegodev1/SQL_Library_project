@@ -31,10 +31,10 @@ The data you can find in this project is gather and created by me using Wikipedi
 
 Kaggle will provide you with many resources and open data for your projects related to this field, while Mockaroo could help you create random registers for your tables.
 
-## 2_Exercises_SQL1.2
+<!--## 2_Exercises_SQL1.2
 
 
-## 3_SQL2
+## 3_SQL2 -->
 
 ## To learn more about:
 For more on SQL and databases see my notes (only in spanish):
