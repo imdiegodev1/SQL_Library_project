@@ -1,6 +1,7 @@
-# SQL_projects
+# SQL_Library_project
 
-## 1_Library_SQL1
+
+## Library
 
 This project is focused on teaching the fundamentals of SQL and relational databases (RDS) using MySQL database engine. It is a common application of RDS to a library. You can fins examples of:
 
